@@ -1,6 +1,7 @@
 package io.binactivate.model;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class User{
     
@@ -12,12 +13,6 @@ public class User{
     
     public HashMap<User, Double> getBalances() {
         return balances;
-    }
-
-
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
     }
 
 
@@ -36,8 +31,8 @@ public class User{
     }
 
 
-    public User(String userId, String name, String email) {
-        this.userId = userId;
+    public User(String name, String email) {
+        this.userId = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
         this.balances = new HashMap<>();

@@ -6,15 +6,15 @@ import io.binactivate.model.ExpenseGroup;
 import io.binactivate.model.User;
 
 public class ExpenseManager {
-    private ExpenseGroup expenseGroup;
+    // private ExpenseGroup expenseGroup;
     NotificationService notificationService = new EmailNotificationService();
 
-    public ExpenseManager(ExpenseGroup expenseGroup) {
-        this.expenseGroup = expenseGroup;
+    public ExpenseManager() {
+        // this.expenseGroup = expenseGroup;
     }
 
 
-    public void updateBalanceForUser() 
+    public void updateBalanceForAllUsers(ExpenseGroup expenseGroup) 
     {
         User giver = expenseGroup.getGiver();
         for (User taker : expenseGroup.getTakers()) {

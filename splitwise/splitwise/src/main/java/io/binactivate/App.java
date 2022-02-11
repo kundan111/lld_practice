@@ -5,7 +5,9 @@ import java.util.List;
 
 import io.binactivate.model.ExpenseGroup;
 import io.binactivate.model.User;
+import io.binactivate.repository.UserRepository;
 import io.binactivate.service.ExpenseManager;
+import io.binactivate.service.UserService;
 
 /**
  * Hello world!
@@ -16,12 +18,15 @@ public class App
     public static void main( String[] args )
     {
         
-        //creating users
-        User u1 = new User("u1", "Kundan", "kundan@gmail.com");
-        User u2 = new User("u2", "Swaraj", "swaraj@gmail.com");
-        User u3 = new User("u3", "Abhinav", "abhinav@gmail.com");
-        User u4 = new User("u4", "Anshil", "anshil@gmail.com");
-        User u5 = new User("u5", "Saket", "saket@gmail.com");
+        
+        UserService userService = new UserService();
+        User u1 = userService.createUser("Kundan", "kundan@gmail.com");
+        User u2 = userService.createUser("Swaraj", "swaraj@gmail.com");
+        User u3 = userService.createUser("Abhinav", "abhinav@gmail.com");
+        User u4 = userService.createUser("Anshil", "anshil@gmail.com");
+        User u5 = userService.createUser("Saket", "saket@gmail.com");
+
+
 
 
         // Equal splittype
@@ -39,8 +44,8 @@ public class App
         eg1.setTransactionAmount(1000);
 
         
-        ExpenseManager expenseManager1 = new ExpenseManager(eg1);
-        expenseManager1.updateBalanceForUser();
+        ExpenseManager expenseManager1 = new ExpenseManager();
+        expenseManager1.updateBalanceForAllUsers(eg1);
 
         printBalance(eg1);
 
@@ -60,8 +65,8 @@ public class App
         eg3.setSplittype("EXACT");
         eg3.setTransactionAmount(1250);
 
-        ExpenseManager expenseManager3 = new ExpenseManager(eg3);
-        expenseManager3.updateBalanceForUser();
+        ExpenseManager expenseManager3 = new ExpenseManager();
+        expenseManager3.updateBalanceForAllUsers(eg3);
 
         printBalance(eg3);    
 
@@ -80,8 +85,8 @@ public class App
         eg2.setSplittype("PERCENT");
         eg2.setTransactionAmount(1200);
 
-        ExpenseManager expenseManager2 = new ExpenseManager(eg2);
-        expenseManager2.updateBalanceForUser();
+        ExpenseManager expenseManager2 = new ExpenseManager();
+        expenseManager2.updateBalanceForAllUsers(eg2);
 
         printBalance(eg2);    
         
