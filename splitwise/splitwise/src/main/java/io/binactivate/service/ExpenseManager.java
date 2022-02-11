@@ -7,6 +7,7 @@ import io.binactivate.model.User;
 
 public class ExpenseManager {
     private ExpenseGroup expenseGroup;
+    NotificationService notificationService = new EmailNotificationService();
 
     public ExpenseManager(ExpenseGroup expenseGroup) {
         this.expenseGroup = expenseGroup;
@@ -30,7 +31,7 @@ public class ExpenseManager {
                         taker.getBalances().put(giver, -1*part);
                     }
                 
-
+                    
                     // update giver
                     if(giver.getBalances().containsKey(taker))
                     {
@@ -39,6 +40,7 @@ public class ExpenseManager {
                     }else{
                         giver.getBalances().put(taker, part);
                     }
+                    notificationService.notifyUser(taker, expenseGroup);
                 }
                 
                 
