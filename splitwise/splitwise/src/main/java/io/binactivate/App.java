@@ -1,12 +1,15 @@
 package io.binactivate;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import io.binactivate.exception.IllegalUserGivenForCurrentExpenseGroupException;
+import io.binactivate.exception.InsufficientContributionCountGivenException;
+import io.binactivate.exception.SplitTypeNotSetException;
 import io.binactivate.model.ExpenseGroup;
+import io.binactivate.model.SplitTypeEnum;
 import io.binactivate.model.User;
-import io.binactivate.repository.UserRepository;
-import io.binactivate.service.ExpenseManager;
+import io.binactivate.service.ExpenseService;
 import io.binactivate.service.UserService;
 
 /**
@@ -15,11 +18,21 @@ import io.binactivate.service.UserService;
  */
 public class App 
 {
+    static ExpenseService expenseService;
+    static UserService userService;
+    /**
+     * @param args
+     */
     public static void main( String[] args )
     {
         
+        // intialising user service
+        userService = new UserService();
         
-        UserService userService = new UserService();
+        // intialising expense service
+        expenseService = new ExpenseService();
+
+
         User u1 = userService.createUser("Kundan", "kundan@gmail.com");
         User u2 = userService.createUser("Swaraj", "swaraj@gmail.com");
         User u3 = userService.createUser("Abhinav", "abhinav@gmail.com");
@@ -29,67 +42,70 @@ public class App
 
 
 
-        // Equal splittype
-        ExpenseGroup eg1 = new ExpenseGroup();
-        List<User> takers1 = new ArrayList<>();
-        takers1.add(u1);
-        takers1.add(u2);
-        takers1.add(u3);
-        takers1.add(u4);
-        
+        ExpenseGroup eg = null;
+        try {
+        		// 	Equal splittype
+                Set<User> takers = new HashSet<>();
+                takers.add(u1);
+                takers.add(u2);
+                takers.add(u3);
+                takers.add(u4);
+             
+                eg = expenseService.createExpenseGroup(u1, takers, 1000.0, SplitTypeEnum.EQUAL, null);
+                expenseService.updateBalanceForAllUsersInExpenseGroup(eg);
+                printBalance(eg);
+                
+                System.out.println("========================================");
+                
+                // exact splittype
+                
+                takers.clear();
+                takers.add(u2);
+                takers.add(u3);
+                
+                HashMap<User, Double> contriHashMap = new HashMap<>();
+                contriHashMap.put(u2, 370.0);
+                contriHashMap.put(u3, 880.0);
+                
+                
+                eg = expenseService.createExpenseGroup(u1, takers, 1250.0, SplitTypeEnum.EXACT, contriHashMap);
+                expenseService.updateBalanceForAllUsersInExpenseGroup(eg);
+                printBalance(eg);
+                
+                System.out.println("========================================");
+                
+                
+             // percent splittype
+                takers.clear();
+                
+                takers.add(u1);
+                takers.add(u2);
+                takers.add(u3);
+                takers.add(u4);
+                
+                contriHashMap.clear();
+                
+                contriHashMap.put(u1, 40.0);
+                contriHashMap.put(u2, 20.0);
+                contriHashMap.put(u3, 20.0);
+                contriHashMap.put(u4, 20.0);
+                
+                eg = expenseService.createExpenseGroup(u1, takers, 1200, SplitTypeEnum.PERCENT, contriHashMap);
+                expenseService.updateBalanceForAllUsersInExpenseGroup(eg);
+                printBalance(eg);
 
-        eg1.setTakers(takers1);
-        eg1.setGiver(u1);
-        eg1.setSplittype("EQUAL");
-        eg1.setTransactionAmount(1000);
+                System.out.println("========================================");
 
-        
-        ExpenseManager expenseManager1 = new ExpenseManager();
-        expenseManager1.updateBalanceForAllUsers(eg1);
+                for (User user : takers) {
+                    System.out.println(user.getUserId() + " -> " + user.getName());
+                }
+                
 
-        printBalance(eg1);
+        } catch (SplitTypeNotSetException | InsufficientContributionCountGivenException
+                | IllegalUserGivenForCurrentExpenseGroupException e) {
+            e.printStackTrace();
+        }
 
-
-        System.out.println("========================================");
-
-        
-        
-        // exact splittype
-        ExpenseGroup eg3 = new ExpenseGroup();
-        List<User> takers3 = new ArrayList<>();
-        takers3.add(u2);
-        takers3.add(u3);
-        eg3.setTakers(takers3);
-        
-        eg3.setGiver(u1);
-        eg3.setSplittype("EXACT");
-        eg3.setTransactionAmount(1250);
-
-        ExpenseManager expenseManager3 = new ExpenseManager();
-        expenseManager3.updateBalanceForAllUsers(eg3);
-
-        printBalance(eg3);    
-
-        System.out.println("========================================");
-        // percent splittype
-        
-        ExpenseGroup eg2 = new ExpenseGroup();
-        List<User> takers2 = new ArrayList<>();
-        takers2.add(u1);
-        takers2.add(u2);
-        takers2.add(u3);
-        takers2.add(u4);
-        eg2.setTakers(takers2);
-        
-        eg2.setGiver(u4);
-        eg2.setSplittype("PERCENT");
-        eg2.setTransactionAmount(1200);
-
-        ExpenseManager expenseManager2 = new ExpenseManager();
-        expenseManager2.updateBalanceForAllUsers(eg2);
-
-        printBalance(eg2);    
-        
 
     }
 

@@ -1,20 +1,40 @@
 package io.binactivate.service;
 
+
+import java.util.HashMap;
+import java.util.Set;
+
 import io.binactivate.exception.IllegalExactSplitGiven;
 import io.binactivate.exception.IllegalPercentSplitGiven;
+import io.binactivate.exception.IllegalUserGivenForCurrentExpenseGroupException;
+import io.binactivate.exception.InsufficientContributionCountGivenException;
+import io.binactivate.exception.SplitTypeNotSetException;
 import io.binactivate.model.ExpenseGroup;
+import io.binactivate.model.SplitTypeEnum;
 import io.binactivate.model.User;
 
-public class ExpenseManager {
+public class ExpenseService {
     // private ExpenseGroup expenseGroup;
     NotificationService notificationService = new EmailNotificationService();
 
-    public ExpenseManager() {
+    public ExpenseService() {
         // this.expenseGroup = expenseGroup;
     }
 
+    public ExpenseGroup createExpenseGroup(User giver, Set<User> takers,double transactionAmount, SplitTypeEnum splitTypeEnum, HashMap<User,Double> userContri) throws SplitTypeNotSetException, 
+    InsufficientContributionCountGivenException, IllegalUserGivenForCurrentExpenseGroupException
+    {
+        ExpenseGroup newExpenseGroup = new ExpenseGroup();
+        newExpenseGroup.setTakers(takers);
+        newExpenseGroup.setGiver(giver);
+        newExpenseGroup.setTransactionAmount(transactionAmount);
+        newExpenseGroup.setSplittype(splitTypeEnum);
+        newExpenseGroup.setAppropriateValuesForSplitType(userContri);
+        
+        return newExpenseGroup;
+    }
 
-    public void updateBalanceForAllUsers(ExpenseGroup expenseGroup) 
+    public void updateBalanceForAllUsersInExpenseGroup(ExpenseGroup expenseGroup) 
     {
         User giver = expenseGroup.getGiver();
         for (User taker : expenseGroup.getTakers()) {
@@ -46,7 +66,7 @@ public class ExpenseManager {
                 
             } catch (IllegalExactSplitGiven | IllegalPercentSplitGiven e) {
                 
-                System.out.println(e.getClass().getName() + " : " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

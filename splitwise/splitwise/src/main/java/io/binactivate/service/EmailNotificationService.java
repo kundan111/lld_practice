@@ -11,15 +11,13 @@ public class EmailNotificationService implements NotificationService{
         User giver = expenseGroup.getGiver();
         Double amount = user.getBalances().get(giver);
 
-        System.out.println("amount is: " + amount);
-        
         if(amount < 0)
         {
-            body.append("you owe " + giver + amount + " !");
-            System.out.println("Email sent with body " + body.toString() + " to " + user.getEmail());
+            body.append("you owe " + giver + " " + -1*amount + "!");
+            System.out.println("Email sent with body: [" + body.toString() + " to " + user.getEmail() + " ]");
         }else{
-            body.append(giver + " owe you " + amount + " !");
-            System.out.println("Email sent with body " + body.toString() + " to " + user.getEmail());
+            body.append(giver + " owe you " + amount + "!");
+            System.out.println("Email sent with body: [" + body.toString() + " to " + user.getEmail() + " ]");
         }
         
         
