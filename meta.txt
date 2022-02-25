@@ -1,0 +1,23 @@
+=========== LLD case Study ================
+
+splitwise -> Done
+Parking Lot -> Done
+Design Cache system -> 
+Design a Vending Machine
+Movie Ticket Booking
+Design Amazon Locker Service
+
+=========== Design Pattern ================
+
+Creational DP
+	-> Sigleton
+	-> Factory
+	-> Builder
+Structural DP
+	-> Facade
+	-> Decorator
+	-> Adapter
+Behavioral DP
+	-> Command
+	-> Observer
+
