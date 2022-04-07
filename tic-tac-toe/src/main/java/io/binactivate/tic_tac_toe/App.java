@@ -1,5 +1,8 @@
 package io.binactivate.tic_tac_toe;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -16,10 +19,18 @@ import io.binactivate.tic_tac_toe.service.UserService;
 // https://workat.tech/machine-coding/practice/design-tic-tac-toe-smyfi9x064ry
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
+        FileReader fr = new FileReader("src\\main\\java\\resources\\tic-tac-toe-ascii.txt");    
         
-        System.out.println( "\n\n\n======================== Starting TIC-TAC-TOE ========================\n\n\n" );
+        int i;    
+        while((i=fr.read())!=-1)    
+        {
+
+            System.out.print((char)i);    
+        }
+        fr.close();   
+        System.out.println();
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter dimension of tic-tac-toe board: ");
