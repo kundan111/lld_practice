@@ -1,6 +1,5 @@
 package io.binactivate.tic_tac_toe;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +42,13 @@ public class App
         // Enter number of users
         System.out.println("Enter number of players: ");
         int numberOfUsers = sc.nextInt();
+
+        while(numberOfUsers < 2)
+        {
+            System.out.println("There should be atleast 2 players");
+            System.out.println("Enter number of players: ");
+            numberOfUsers = sc.nextInt();
+        }
 
         int count = 0;
         while (numberOfUsers-- > 0) {
